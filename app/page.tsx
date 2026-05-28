@@ -13,7 +13,10 @@ import {
   ShoppingCart,
   Boxes,
   Database,
-  ChevronRight
+  ChevronRight,
+  X,
+  Loader2,
+  CheckCircle2
 } from 'lucide-react';
 
 interface Product {
@@ -24,10 +27,27 @@ interface Product {
   category_name: string;
 }
 
+interface Category {
+  id: string;
+  name: string;
+}
+
 export default function InventoryPage() {
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubmitting, setIsModalSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+
+  // Form State
+  const [formData, setFormData] = useState({
+    name: '',
+    price: '',
+    stock: '',
+    category_id: ''
+  });
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -35,6 +55,16 @@ export default function InventoryPage() {
       const res = await fetch('/api/products');
       const data = await res.json();
       setProducts(Array.isArray(data) ? data : []);
+      
+      // Extraer categorías únicas para el formulario (simulado a partir de los datos actuales o se podría llamar a un API de categorías si existiera)
+      const uniqueCategories = Array.from(new Set(data.map((p: any) => p.category_name))).map(name => {
+        const prod = data.find((p: any) => p.category_name === name);
+        return { id: prod.category_id || '', name };
+      }).filter(c => c.id !== '');
+      
+      // Como no tenemos un endpoint de categorías independiente todavía, usaremos IDs fijos basados en las semillas si los conocemos, 
+      // o dejaremos que el usuario los use si los productos ya vienen con ellos.
+      setCategories(uniqueCategories);
     } catch (error) {
       console.error('Error fetching products:', error);
     } finally {
@@ -46,6 +76,36 @@ export default function InventoryPage() {
     fetchProducts();
   }, []);
 
+  const handleAddProduct = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsModalSubmitting(true);
+    try {
+      const res = await fetch('/api/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          price: parseFloat(formData.price),
+          stock: parseInt(formData.stock, 10)
+        }),
+      });
+
+      if (res.ok) {
+        setSuccessMessage('¡Producto añadido con éxito!');
+        setFormData({ name: '', price: '', stock: '', category_id: '' });
+        setTimeout(() => {
+          setIsModalOpen(false);
+          setSuccessMessage(null);
+          fetchProducts();
+        }, 1500);
+      }
+    } catch (error) {
+      console.error('Error adding product:', error);
+    } finally {
+      setIsModalSubmitting(false);
+    }
+  };
+
   const filteredProducts = products.filter(p => 
     p.name.toLowerCase().includes(filter.toLowerCase()) || 
     p.category_name.toLowerCase().includes(filter.toLowerCase())
@@ -55,9 +115,9 @@ export default function InventoryPage() {
   const lowStock = products.filter(p => p.stock < 10);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 pb-20">
+    <div className="min-h-screen bg-slate-50 text-slate-900 pb-20 relative">
       {/* Background Decor */}
-      <div className="absolute top-0 inset-x-0 h-96 bg-gradient-to-b from-indigo-50 to-slate-50 -z-10" />
+      <div className="absolute top-0 inset-x-0 h-96 bg-gradient-to-b from-indigo-50/50 to-slate-50 -z-10" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
         {/* Header Section */}
@@ -78,10 +138,14 @@ export default function InventoryPage() {
             <button 
               onClick={fetchProducts}
               className="p-3 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-indigo-600 hover:border-indigo-200 transition-all shadow-sm active:scale-95"
+              title="Refrescar datos"
             >
               <RefreshCcw className={loading ? 'animate-spin' : ''} size={20} />
             </button>
-            <button className="flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition-all active:scale-95">
+            <button 
+              onClick={() => setIsModalOpen(true)}
+              className="flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition-all active:scale-95"
+            >
               <Plus size={20} />
               <span>Añadir Producto</span>
             </button>
@@ -170,7 +234,7 @@ export default function InventoryPage() {
                   
                   <div className="flex items-end justify-between">
                     <div>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Precio</p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Precio Unidad</p>
                       <p className="text-xl font-black text-slate-900">
                         {Number(product.price).toLocaleString('es-ES', { minimumFractionDigits: 2 })}€
                       </p>
@@ -188,7 +252,7 @@ export default function InventoryPage() {
 
                   <div className="mt-6 pt-4 border-t border-slate-50 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
                     <button className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
-                      Gestionar <ChevronRight size={14} />
+                      Detalles <ChevronRight size={14} />
                     </button>
                     <div className="text-[8px] font-mono text-slate-300 uppercase">
                       ID: {product.id.substring(0, 8)}
@@ -206,6 +270,107 @@ export default function InventoryPage() {
           )}
         </div>
       </div>
+
+      {/* Modal - Añadir Producto */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+          <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div className="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+              <h3 className="text-xl font-bold text-slate-900">Nuevo Producto</h3>
+              <button 
+                onClick={() => setIsModalOpen(false)}
+                className="p-2 hover:bg-white rounded-xl text-slate-400 hover:text-slate-600 transition-colors border border-transparent hover:border-slate-200"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <form onSubmit={handleAddProduct} className="p-8 space-y-5">
+              {successMessage ? (
+                <div className="py-12 text-center space-y-4">
+                  <div className="bg-emerald-100 text-emerald-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto animate-bounce">
+                    <CheckCircle2 size={32} />
+                  </div>
+                  <p className="text-emerald-700 font-bold">{successMessage}</p>
+                </div>
+              ) : (
+                <>
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Nombre del Producto</label>
+                    <input 
+                      type="text" 
+                      required
+                      value={formData.name}
+                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      placeholder="Ej. Teclado Mecánico RGB"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Precio (€)</label>
+                      <input 
+                        type="number" 
+                        step="0.01"
+                        required
+                        value={formData.price}
+                        onChange={(e) => setFormData({...formData, price: e.target.value})}
+                        placeholder="0.00"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Stock Inicial</label>
+                      <input 
+                        type="number" 
+                        required
+                        value={formData.stock}
+                        onChange={(e) => setFormData({...formData, stock: e.target.value})}
+                        placeholder="0"
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Categoría</label>
+                    <select 
+                      required
+                      value={formData.category_id}
+                      onChange={(e) => setFormData({...formData, category_id: e.target.value})}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all appearance-none"
+                    >
+                      <option value="">Seleccionar categoría...</option>
+                      {categories.map(cat => (
+                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="pt-4 flex gap-3">
+                    <button 
+                      type="button"
+                      onClick={() => setIsModalOpen(false)}
+                      className="flex-1 px-6 py-3 rounded-xl font-bold text-slate-500 hover:bg-slate-100 transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                    <button 
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="flex-[2] bg-slate-900 text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:bg-indigo-600 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                    >
+                      {isSubmitting ? <Loader2 className="animate-spin" size={20} /> : <Plus size={20} />}
+                      Guardar Producto
+                    </button>
+                  </div>
+                </>
+              )}
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
