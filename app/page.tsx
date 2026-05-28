@@ -13,7 +13,11 @@ import {
   ShoppingCart,
   Boxes,
   Database,
-  ChevronRight
+  ChevronRight,
+  LayoutDashboard,
+  Settings,
+  Bell,
+  BarChart3
 } from 'lucide-react';
 
 interface Product {
@@ -38,7 +42,7 @@ export default function InventoryPage() {
     } catch (error) {
       console.error('Error fetching products:', error);
     } finally {
-      setTimeout(() => setLoading(false), 600); // Pequeño delay para suavizar la transición
+      setTimeout(() => setLoading(false), 800);
     }
   };
 
@@ -52,184 +56,190 @@ export default function InventoryPage() {
   );
 
   const totalValue = products.reduce((acc, p) => acc + (Number(p.price) * p.stock), 0);
-  const lowStock = products.filter(p => p.stock < 10);
+  const totalStock = products.reduce((acc, p) => acc + p.stock, 0);
+  const lowStockCount = products.filter(p => p.stock < 10).length;
 
   return (
-    <div className="min-h-screen bg-[#fdfdfe] text-slate-900 font-sans selection:bg-indigo-100">
-      {/* Abstract Background Elements */}
-      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <div className="absolute -top-24 -left-24 w-96 h-96 bg-indigo-50 rounded-full blur-3xl opacity-50" />
-        <div className="absolute top-1/2 -right-24 w-80 h-80 bg-blue-50 rounded-full blur-3xl opacity-30" />
+    <div className="min-h-screen bg-[#0f172a] text-slate-200 font-sans overflow-x-hidden selection:bg-indigo-500/30">
+      {/* Mesh Gradient Background */}
+      <div className="fixed inset-0 z-0 opacity-40">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-600/30 blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-blue-600/20 blur-[120px]" />
+        <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] rounded-full bg-purple-600/20 blur-[120px]" />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-20">
-        {/* Top Navigation / Hero */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-          <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-600 text-xs font-bold uppercase tracking-wider mb-4 border border-indigo-100">
-              <Database size={14} />
-              Neon Database Live
+      <div className="relative z-10 flex flex-col lg:flex-row min-h-screen">
+        {/* Sidebar (Desktop) */}
+        <aside className="hidden lg:flex flex-col w-72 border-r border-slate-800/50 bg-slate-900/50 backdrop-blur-xl p-6">
+          <div className="flex items-center gap-3 mb-12">
+            <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20">
+              <Package className="text-white" size={24} />
             </div>
-            <h1 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 mb-2">
-              EcoMarket<span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-blue-500 underline decoration-indigo-200 decoration-4 underline-offset-8 ml-2">Stock</span>
-            </h1>
-            <p className="text-slate-500 text-lg max-w-2xl">
-              Sistema inteligente de gestión de inventario serverless. Control total sobre tus productos y categorías.
-            </p>
+            <span className="text-xl font-black tracking-tighter text-white">ECO MARKET</span>
           </div>
-          <div className="flex items-center gap-3">
-            <button 
-              onClick={fetchProducts}
-              className="p-3 rounded-2xl bg-white border border-slate-200 text-slate-600 hover:text-indigo-600 hover:border-indigo-200 transition-all shadow-sm active:scale-95"
-              title="Sincronizar datos"
-            >
-              <RefreshCcw className={loading ? 'animate-spin' : ''} size={20} />
+
+          <nav className="space-y-2 flex-1">
+            <a href="#" className="flex items-center gap-3 px-4 py-3 rounded-xl bg-indigo-500/10 text-indigo-400 font-bold border border-indigo-500/20 transition-all">
+              <LayoutDashboard size={20} />
+              Dashboard
+            </a>
+            <a href="#" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-all">
+              <Boxes size={20} />
+              Inventario
+            </a>
+            <a href="#" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-all">
+              <BarChart3 size={20} />
+              Reportes
+            </a>
+            <a href="#" className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/50 hover:text-slate-200 transition-all">
+              <Settings size={20} />
+              Ajustes
+            </a>
+          </nav>
+
+          <div className="mt-auto p-4 bg-gradient-to-br from-indigo-600/20 to-purple-600/20 rounded-2xl border border-white/5 backdrop-blur-md">
+            <p className="text-xs font-bold text-indigo-400 uppercase mb-2">Soporte Premium</p>
+            <p className="text-xs text-slate-400 leading-relaxed mb-4">¿Necesitas ayuda con tu inventario?</p>
+            <button className="w-full py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-lg transition-colors">
+              Contactar
             </button>
-            <button className="flex items-center gap-2 bg-slate-900 text-white px-6 py-3 rounded-2xl font-bold shadow-xl shadow-slate-200 hover:bg-indigo-600 transition-all active:scale-95">
-              <Plus size={20} />
-              <span>Añadir Producto</span>
-            </button>
           </div>
-        </div>
+        </aside>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-          <div className="group bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-indigo-50 transition-all duration-500 relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-              <TrendingUp size={120} />
+        {/* Main Content */}
+        <main className="flex-1 p-4 lg:p-10">
+          {/* Header */}
+          <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
+            <div>
+              <h2 className="text-3xl lg:text-4xl font-black text-white mb-2 tracking-tight">Panel de Existencias</h2>
+              <div className="flex items-center gap-2 text-slate-400 text-sm">
+                <Database size={14} className="text-emerald-500" />
+                <span className="font-medium">Conectado a Neon PostgreSQL • Serverless</span>
+              </div>
             </div>
-            <div className="bg-indigo-50 text-indigo-600 w-12 h-12 rounded-2xl flex items-center justify-center mb-6">
-              <TrendingUp size={24} />
+            <div className="flex items-center gap-4">
+              <div className="relative hidden md:block group">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-indigo-400 transition-colors" size={18} />
+                <input 
+                  type="text" 
+                  placeholder="Buscar..." 
+                  value={filter}
+                  onChange={(e) => setFilter(e.target.value)}
+                  className="bg-slate-900/50 border border-slate-700/50 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all w-64"
+                />
+              </div>
+              <button className="p-2.5 bg-slate-800/50 border border-slate-700/50 rounded-xl text-slate-400 hover:text-white transition-all">
+                <Bell size={20} />
+              </button>
+              <button 
+                onClick={fetchProducts}
+                className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2.5 rounded-xl font-bold shadow-lg shadow-indigo-600/20 transition-all active:scale-95"
+              >
+                <Plus size={20} />
+                <span className="hidden sm:inline">Nuevo</span>
+              </button>
             </div>
-            <h3 className="text-slate-400 font-medium mb-1 uppercase text-xs tracking-widest">Valor Activo</h3>
-            <p className="text-4xl font-black text-slate-900 tabular-nums">
-              {totalValue.toLocaleString('es-ES', { minimumFractionDigits: 2 })}<span className="text-indigo-400 ml-1">€</span>
-            </p>
-          </div>
+          </header>
 
-          <div className="group bg-white p-8 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-emerald-50 transition-all duration-500 relative overflow-hidden">
-            <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity text-emerald-600">
-              <Boxes size={120} />
-            </div>
-            <div className="bg-emerald-50 text-emerald-600 w-12 h-12 rounded-2xl flex items-center justify-center mb-6">
-              <Boxes size={24} />
-            </div>
-            <h3 className="text-slate-400 font-medium mb-1 uppercase text-xs tracking-widest">Total Stock</h3>
-            <p className="text-4xl font-black text-slate-900 tabular-nums">
-              {products.reduce((acc, p) => acc + p.stock, 0)}<span className="text-emerald-400 ml-1">uds</span>
-            </p>
-          </div>
+          {/* Stats Bar */}
+          <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            {[
+              { label: 'Valor Total', value: `${totalValue.toLocaleString()}€`, icon: TrendingUp, color: 'text-indigo-400', bg: 'bg-indigo-500/10' },
+              { label: 'Unidades', value: totalStock, icon: Boxes, color: 'text-blue-400', bg: 'bg-blue-500/10' },
+              { label: 'Alertas', value: lowStockCount, icon: AlertCircle, color: 'text-rose-400', bg: 'bg-rose-500/10' },
+              { label: 'Categorías', value: new Set(products.map(p => p.category_name)).size, icon: Layers, color: 'text-purple-400', bg: 'bg-purple-500/10' }
+            ].map((stat, i) => (
+              <div key={i} className="bg-slate-900/40 backdrop-blur-md border border-white/5 p-6 rounded-3xl group hover:border-indigo-500/30 transition-all duration-300">
+                <div className={`${stat.bg} ${stat.color} w-10 h-10 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                  <stat.icon size={20} />
+                </div>
+                <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">{stat.label}</p>
+                <p className="text-2xl font-black text-white">{stat.value}</p>
+              </div>
+            ))}
+          </section>
 
-          <div className="group bg-slate-900 p-8 rounded-[2rem] shadow-xl shadow-slate-200 relative overflow-hidden transition-all duration-500">
-             <div className="absolute top-0 right-0 p-4 opacity-10 text-white">
-              <AlertCircle size={120} />
+          {/* Grid Content */}
+          <section className="space-y-6">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xl font-bold text-white flex items-center gap-2">
+                Explorador de Inventario
+                {loading && <RefreshCcw size={16} className="animate-spin text-indigo-400" />}
+              </h3>
+              <div className="h-px flex-1 mx-6 bg-gradient-to-r from-slate-800/0 via-slate-800 to-slate-800/0 hidden sm:block" />
             </div>
-            <div className="bg-white/10 text-white w-12 h-12 rounded-2xl flex items-center justify-center mb-6 backdrop-blur-md">
-              <AlertCircle size={24} />
-            </div>
-            <h3 className="text-slate-400 font-medium mb-1 uppercase text-xs tracking-widest">Alertas Stock</h3>
-            <p className="text-4xl font-black text-white tabular-nums">
-              {lowStock.length}<span className="text-indigo-400 ml-1">críticos</span>
-            </p>
-          </div>
-        </div>
 
-        {/* Content Section */}
-        <div className="space-y-6">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <h2 className="text-2xl font-black flex items-center gap-3">
-              Catálogo General
-              <span className="bg-slate-100 text-slate-500 text-sm px-3 py-1 rounded-full font-bold">
-                {filteredProducts.length}
-              </span>
-            </h2>
-            <div className="relative w-full sm:w-96 group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors" size={18} />
-              <input 
-                type="text" 
-                placeholder="Buscar por nombre o categoría..." 
-                value={filter}
-                onChange={(e) => setFilter(e.target.value)}
-                className="w-full bg-white border border-slate-200 rounded-[1.25rem] pl-12 pr-4 py-4 text-sm font-medium focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all shadow-sm"
-              />
-            </div>
-          </div>
-
-          {loading ? (
-             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-pulse">
+            {loading ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {[1,2,3,4,5,6].map(i => (
-                  <div key={i} className="h-48 bg-slate-100 rounded-[2rem] border border-slate-200" />
+                  <div key={i} className="h-56 bg-slate-900/40 animate-pulse rounded-3xl border border-white/5" />
                 ))}
-             </div>
-          ) : filteredProducts.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredProducts.map((product) => (
-                <div 
-                  key={product.id} 
-                  className="group bg-white p-6 rounded-[2rem] border border-slate-100 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 relative"
-                >
-                  <div className="flex justify-between items-start mb-6">
-                    <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border ${
-                      product.stock < 10 
-                        ? 'bg-rose-50 text-rose-600 border-rose-100' 
-                        : 'bg-indigo-50 text-indigo-600 border-indigo-100'
-                    }`}>
-                      {product.category_name}
-                    </div>
-                    <div className="text-slate-300 group-hover:text-indigo-600 transition-colors">
-                      <ArrowUpRight size={20} />
-                    </div>
-                  </div>
+              </div>
+            ) : filteredProducts.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                {filteredProducts.map((p) => (
+                  <div key={p.id} className="group relative bg-slate-900/40 backdrop-blur-md border border-white/5 hover:border-indigo-500/30 p-6 rounded-[2.5rem] transition-all duration-500 overflow-hidden">
+                    {/* Hover Glow */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    
+                    <div className="relative z-10">
+                      <div className="flex justify-between items-start mb-6">
+                        <span className="px-3 py-1 rounded-full bg-slate-800 text-slate-400 text-[10px] font-black uppercase tracking-wider border border-white/5">
+                          {p.category_name}
+                        </span>
+                        <div className="p-2 bg-slate-800/50 rounded-xl text-slate-500 group-hover:text-indigo-400 transition-colors">
+                          <ArrowUpRight size={18} />
+                        </div>
+                      </div>
 
-                  <h4 className="text-xl font-bold text-slate-900 mb-2 truncate group-hover:text-indigo-600 transition-colors">
-                    {product.name}
-                  </h4>
-                  
-                  <div className="flex items-end justify-between mt-auto">
-                    <div>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Precio Unitario</p>
-                      <p className="text-2xl font-black text-slate-900">
-                        {Number(product.price).toLocaleString('es-ES', { minimumFractionDigits: 2 })}€
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 text-right">Existencias</p>
-                      <div className={`flex items-center gap-1.5 font-black text-sm ${
-                        product.stock < 10 ? 'text-rose-600' : 'text-slate-900'
-                      }`}>
-                        <ShoppingCart size={14} />
-                        {product.stock} uds
+                      <h4 className="text-xl font-bold text-white mb-6 group-hover:translate-x-1 transition-transform">{p.name}</h4>
+
+                      <div className="flex items-end justify-between">
+                        <div>
+                          <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Precio</p>
+                          <p className="text-2xl font-black text-white tracking-tight">
+                            {Number(p.price).toLocaleString()}
+                            <span className="text-indigo-500 ml-1">€</span>
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <div className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-xl text-xs font-black ${
+                            p.stock < 10 ? 'bg-rose-500/20 text-rose-400' : 'bg-emerald-500/20 text-emerald-400'
+                          }`}>
+                            <ShoppingCart size={14} />
+                            {p.stock} UDS
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="mt-6 pt-6 border-t border-white/5 flex items-center justify-between translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                        <button className="text-xs font-bold text-indigo-400 hover:text-white flex items-center gap-1 group/btn">
+                          Ver detalles 
+                          <ChevronRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
+                        </button>
+                        <span className="text-[10px] font-mono text-slate-600">#{p.id.substring(0, 6)}</span>
                       </div>
                     </div>
                   </div>
-
-                  <div className="mt-6 pt-6 border-t border-slate-50 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
-                      Gestionar Stock <ChevronRight size={14} />
-                    </button>
-                    <div className="text-[8px] font-bold text-slate-300 tracking-tighter uppercase">
-                      ID: {product.id.substring(0, 8)}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="py-24 text-center bg-white rounded-[2rem] border-2 border-dashed border-slate-100">
-              <div className="bg-slate-50 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-300">
-                <Search size={32} />
+                ))}
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-2">Sin resultados</h3>
-              <p className="text-slate-500">No hemos encontrado productos que coincidan con tu búsqueda.</p>
-              <button 
-                onClick={() => setFilter('')}
-                className="mt-6 text-indigo-600 font-bold hover:underline"
-              >
-                Limpiar filtros
-              </button>
-            </div>
-          )}
-        </div>
+            ) : (
+              <div className="py-32 text-center bg-slate-900/20 rounded-[3rem] border-2 border-dashed border-slate-800/50">
+                <div className="w-20 h-20 bg-slate-800/50 rounded-3xl flex items-center justify-center mx-auto mb-6 text-slate-600">
+                  <Search size={32} />
+                </div>
+                <h3 className="text-2xl font-black text-white mb-2">Sin coincidencias</h3>
+                <p className="text-slate-500 font-medium">No hay productos que coincidan con "{filter}"</p>
+                <button 
+                  onClick={() => setFilter('')}
+                  className="mt-6 text-indigo-400 font-bold hover:text-white transition-colors"
+                >
+                  Restablecer búsqueda
+                </button>
+              </div>
+            )}
+          </section>
+        </main>
       </div>
     </div>
   );
