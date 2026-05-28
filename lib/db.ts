@@ -1,4 +1,4 @@
-import { neon } from '@neondatabase/serverless';
+import { Pool } from '@neondatabase/serverless';
 
 if (!process.env.DATABASE_URL) {
   throw new Error('DATABASE_URL is not defined in the environment variables');
@@ -6,6 +6,6 @@ if (!process.env.DATABASE_URL) {
 
 /**
  * Cliente de base de datos Neon (PostgreSQL)
- * Utiliza el driver serverless para optimizar conexiones en entornos como Vercel Edge.
+ * Utiliza Pool para permitir el uso del método .query() y manejar múltiples conexiones.
  */
-export const sql = neon(process.env.DATABASE_URL);
+export const sql = new Pool({ connectionString: process.env.DATABASE_URL });

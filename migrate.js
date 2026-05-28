@@ -1,4 +1,4 @@
-import { neon } from '@neondatabase/serverless';
+import { Pool } from '@neondatabase/serverless';
 import fs from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';
@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 // Cargar variables de entorno
 dotenv.config({ path: '.env.local' });
 
-const sql = neon(process.env.DATABASE_URL);
+const sql = new Pool({ connectionString: process.env.DATABASE_URL });
 
 async function migrate() {
   try {

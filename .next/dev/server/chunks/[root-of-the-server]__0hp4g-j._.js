@@ -53,7 +53,9 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$neondataba
 if (!process.env.DATABASE_URL) {
     throw new Error('DATABASE_URL is not defined in the environment variables');
 }
-const sql = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$neondatabase$2f$serverless$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["neon"])(process.env.DATABASE_URL);
+const sql = new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$neondatabase$2f$serverless$2f$index$2e$mjs__$5b$app$2d$route$5d$__$28$ecmascript$29$__["Pool"]({
+    connectionString: process.env.DATABASE_URL
+});
 }),
 "[project]/app/api/products/route.ts [app-route] (ecmascript)", ((__turbopack_context__) => {
 "use strict";
