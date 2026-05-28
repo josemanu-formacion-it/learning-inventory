@@ -234,7 +234,7 @@ export default function InventoryPage() {
                   
                   <div className="flex items-end justify-between">
                     <div>
-                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Precio Unidad</p>
+                      <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">PRECIO UNIDAD</p>
                       <p className="text-xl font-black text-slate-900">
                         {Number(product.price).toLocaleString('es-ES', { minimumFractionDigits: 2 })}€
                       </p>
@@ -251,8 +251,11 @@ export default function InventoryPage() {
                   </div>
 
                   <div className="mt-6 pt-4 border-t border-slate-50 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
-                      Detalles <ChevronRight size={14} />
+                    <button 
+                      onClick={() => alert(`Gestionar stock para: ${product.name}`)}
+                      className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1"
+                    >
+                      Gestionar <ChevronRight size={14} />
                     </button>
                     <div className="text-[8px] font-mono text-slate-300 uppercase">
                       ID: {product.id.substring(0, 8)}
