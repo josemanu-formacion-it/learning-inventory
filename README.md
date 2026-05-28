@@ -37,4 +37,16 @@ npm install @neondatabase/serverless
 ## 📖 Documentación Requerida
 - [Diseño de Arquitectura](./docs/arquitectura-datos.md)
 - [Análisis SQL (Joins)](./docs/analisis-sql.md)
-- [Seguridad y Prevención de Inyección SQL](./docs/seguridad-db.md) (Pendiente)
+- [Seguridad y Prevención de Inyección SQL](./docs/seguridad-db.md)
+
+## 🏗️ Abstracción con ORMs: Drizzle ORM
+
+Aunque escribir SQL puro es fundamental, para escalar aplicaciones utilizamos **Drizzle ORM**. 
+
+### Ventajas de usar Drizzle ORM:
+1. **Type Safety:** El esquema se define en TypeScript (`lib/schema.ts`), lo que permite que el autocompletado nos ayude a evitar errores de nombres de columnas o tipos de datos.
+2. **SQL-like:** A diferencia de otros ORMs que abstraen demasiado, Drizzle mantiene una sintaxis muy parecida a SQL, lo que facilita la transición.
+3. **Rendimiento:** Es extremadamente ligero y no tiene sobrecarga de ejecución (runtime overhead) significativa.
+4. **Migraciones:** Facilita la evolución de la base de datos de forma controlada.
+
+Puedes ver un ejemplo de implementación en `/app/api/drizzle-test/route.ts`.
