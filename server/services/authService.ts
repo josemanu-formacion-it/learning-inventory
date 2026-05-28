@@ -5,9 +5,9 @@ class AuthService {
   private users: User[] = [
     {
       id: '1',
-      email: 'admin@ecomarket.com',
+      email: 'admin@learning-inventory.com',
       password: 'password123',
-      name: 'Admin EcoMarket',
+      name: 'Admin Learning Inventory',
     }
   ];
 

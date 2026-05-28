@@ -1,4 +1,4 @@
-# Definición del Proyecto: EcoMarket
+# Definición del Proyecto: Learning Inventory
 
 ## El Problema
 Muchos pequeños negocios locales (tiendas de barrio, ferreterías, pequeñas boutiques) gestionan su inventario de forma manual, ya sea en papel o en hojas de cálculo desorganizadas. Esto conlleva a:
@@ -10,7 +10,7 @@ Muchos pequeños negocios locales (tiendas de barrio, ferreterías, pequeñas bo
 ## Usuario Objetivo
 Dueños de pequeños negocios locales que buscan una herramienta sencilla, rápida y accesible desde cualquier navegador para digitalizar su inventario sin la complejidad de un ERP corporativo.
 
-## MVP (Producto Mínimo Viable) de EcoMarket
+## MVP (Producto Mínimo Viable) de Learning Inventory
 El MVP se centrará en las funcionalidades críticas para la gestión diaria:
 
 1.  **Autenticación de Usuario:** Registro e inicio de sesión seguro para proteger los datos del negocio.

@@ -19,7 +19,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     <div className="min-h-screen bg-gray-100 flex flex-col lg:flex-row">
       {/* Mobile Header */}
       <header className="lg:hidden bg-white shadow-sm p-4 flex items-center justify-between sticky top-0 z-40">
-        <h1 className="text-xl font-bold text-green-600">EcoMarket</h1>
+        <h1 className="text-xl font-bold text-green-600">Learning Inventory</h1>
         <button 
           onClick={() => setIsSidebarOpen(true)}
           className="p-2 text-gray-600 hover:bg-gray-50 rounded-lg"
@@ -42,7 +42,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         <div className="p-6 flex items-center justify-between flex-shrink-0">
-          <h1 className="text-2xl font-bold text-green-600">EcoMarket</h1>
+          <h1 className="text-2xl font-bold text-green-600">Learning Inventory</h1>
           <button 
             className="lg:hidden p-2 text-gray-400 hover:text-gray-600"
             onClick={closeSidebar}

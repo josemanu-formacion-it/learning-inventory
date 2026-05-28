@@ -1,4 +1,4 @@
-# Rutas y Navegación - EcoMarket
+# Rutas y Navegación - Learning Inventory
 
 La navegación se gestiona con **React Router v7**.
 

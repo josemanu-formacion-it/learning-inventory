@@ -1,4 +1,4 @@
-# Hooks de React - EcoMarket
+# Hooks de React - Learning Inventory
 
 Utilizamos tanto hooks nativos de React como custom hooks para gestionar la lógica de la aplicación.
 

@@ -1,4 +1,4 @@
-# Documentación de Componentes - EcoMarket
+# Documentación de Componentes - Learning Inventory
 
 En esta aplicación, hemos seguido una estructura de componentes modulares y reutilizables utilizando **React**, **TypeScript** y **Tailwind CSS**.
 

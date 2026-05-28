@@ -1,6 +1,6 @@
 # Gestión del Proyecto: Tablero Trello (Simulado)
 
-Para la organización de EcoMarket, se ha diseñado un tablero Trello con las siguientes columnas y tarjetas:
+Para la organización de Learning Inventory, se ha diseñado un tablero Trello con las siguientes columnas y tarjetas:
 
 ## 1. Backlog (Pendientes)
 - [ ] Configuración de Base de Datos real (Post-MVP).

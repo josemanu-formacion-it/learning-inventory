@@ -1,4 +1,4 @@
-# Retrospectiva del Proyecto: EcoMarket
+# Retrospectiva del Proyecto: Learning Inventory
 
 ## Logros
 1.  **Fullstack funcional:** Se ha entregado un MVP completo con frontend, backend y comunicación fluida entre ambos.
@@ -17,4 +17,4 @@
 - **Notificaciones:** Alertas por correo electrónico cuando el stock llegue a niveles críticos.
 
 ## Conclusión
-EcoMarket demuestra que es posible construir una herramienta robusta y escalable para pequeños negocios utilizando tecnologías modernas y siguiendo buenas prácticas de ingeniería de software.
+Learning Inventory demuestra que es posible construir una herramienta robusta y escalable para pequeños negocios utilizando tecnologías modernas y siguiendo buenas prácticas de ingeniería de software.

@@ -1,4 +1,4 @@
-# Context API y Estado Global - EcoMarket
+# Context API y Estado Global - Learning Inventory
 
 Para evitar el "prop drilling" (pasar datos por muchos niveles de componentes), utilizamos la Context API de React.
 

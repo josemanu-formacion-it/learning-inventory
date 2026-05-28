@@ -1,6 +1,6 @@
-# EcoMarket - API Backend ⚙️
+# Learning Inventory - API Backend ⚙️
 
-Servidor robusto y escalable que gestiona la lógica de negocio, autenticación e inventario de EcoMarket.
+Servidor robusto y escalable que gestiona la lógica de negocio, autenticación e inventario de Learning Inventory.
 
 ## 🛠️ Stack Tecnológico
 - **Node.js v22**: Motor de ejecución de JavaScript.
@@ -17,7 +17,7 @@ El servidor sigue un patrón de arquitectura por capas para separar responsabili
 
 ## 🌐 Despliegue
 - **Platform:** Render.
-- **URL:** [https://eco-market-e03e.onrender.com](https://eco-market-e03e.onrender.com)
+- **URL:** [https://learning-inventory-api.onrender.com](https://learning-inventory-api.onrender.com)
 - **Modo Producción:** El servidor se compila a JavaScript (`dist/`) y se ejecuta con `node`.
 
 ## 🚀 Comandos

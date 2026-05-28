@@ -1,6 +1,6 @@
-# EcoMarket - Cliente Frontend 💻
+# Learning Inventory - Cliente Frontend 💻
 
-Interfaz de usuario moderna y reactiva para la gestión de inventario de EcoMarket.
+Interfaz de usuario moderna y reactiva para la gestión de inventario de Learning Inventory.
 
 ## 🛠️ Stack Tecnológico
 - **React 19**: Aprovechando las últimas mejoras en rendimiento y hooks.
@@ -10,7 +10,7 @@ Interfaz de usuario moderna y reactiva para la gestión de inventario de EcoMark
 
 ## 🌐 Despliegue
 - **Platform:** Vercel.
-- **URL:** [https://eco-market-client.vercel.app](https://eco-market-client.vercel.app)
+- **URL:** [https://learning-inventory-olive.vercel.app/](https://learning-inventory-olive.vercel.app/)
 - **Configuración:** La aplicación consume la API alojada en Render a través de la URL base configurada.
 
 ## 🚀 Comandos Disponibles

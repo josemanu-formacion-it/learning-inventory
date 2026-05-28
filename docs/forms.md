@@ -1,4 +1,4 @@
-# Formularios e Interacción - EcoMarket
+# Formularios e Interacción - Learning Inventory
 
 Los formularios son piezas clave para la gestión del inventario.
 

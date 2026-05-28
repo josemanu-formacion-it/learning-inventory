@@ -1,4 +1,4 @@
-# Documentación de la API: EcoMarket v1
+# Documentación de la API: Learning Inventory v1
 
 **Base URL:** `http://localhost:4000/api/v1`
 
@@ -10,7 +10,7 @@
 - **Cuerpo:**
   ```json
   {
-    "email": "admin@ecomarket.com",
+    "email": "admin@learning-inventory.com",
     "password": "password123"
   }
   ```
@@ -20,8 +20,8 @@
     "token": "JWT_TOKEN_HERE",
     "user": {
       "id": "1",
-      "email": "admin@ecomarket.com",
-      "name": "Admin EcoMarket"
+      "email": "admin@learning-inventory.com",
+      "name": "Admin Learning Inventory"
     }
   }
   ```

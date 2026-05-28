@@ -15,7 +15,7 @@ app.use('/api/v1', routes);
 
 app.get('/', (req: Request, res: Response) => {
   res.json({
-    name: 'EcoMarket API',
+    name: 'Learning Inventory API',
     version: '1.0.0',
     endpoints: {
       auth: '/api/v1/auth',
@@ -26,7 +26,7 @@ app.get('/', (req: Request, res: Response) => {
 });
 
 app.get('/health', (req: Request, res: Response) => {
-  res.json({ status: 'ok', message: 'EcoMarket API is running' });
+  res.json({ status: 'ok', message: 'Learning Inventory API is running' });
 });
 
 app.listen(PORT, () => {

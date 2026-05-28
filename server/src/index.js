@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 app.use('/api/v1', routes);
 app.get('/health', (req, res) => {
-    res.json({ status: 'ok', message: 'EcoMarket API is running' });
+    res.json({ status: 'ok', message: 'Learning Inventory API is running' });
 });
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

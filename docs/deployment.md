@@ -1,4 +1,4 @@
-# Despliegue - EcoMarket
+# Despliegue - Learning Inventory
 
 El proyecto está preparado para ser desplegado en plataformas modernas como **Vercel**.
 

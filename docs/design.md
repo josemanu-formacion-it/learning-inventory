@@ -1,6 +1,6 @@
-# Arquitectura del Sistema: EcoMarket
+# Arquitectura del Sistema: Learning Inventory
 
-EcoMarket sigue una arquitectura de **Aplicación de Página Única (SPA)** con un backend desacoplado, utilizando el stack MERN (sin la M de Mongo por ahora, usando persistencia en memoria).
+Learning Inventory sigue una arquitectura de **Aplicación de Página Única (SPA)** con un backend desacoplado, utilizando el stack MERN (sin la M de Mongo por ahora, usando persistencia en memoria).
 
 ## Frontend (Client)
 - **Framework:** React con TypeScript.

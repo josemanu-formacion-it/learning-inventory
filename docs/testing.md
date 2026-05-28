@@ -1,4 +1,4 @@
-# Testing y Mejoras - EcoMarket
+# Testing y Mejoras - Learning Inventory
 
 ## Pruebas Manuales Realizadas
 1. **Flujo de Autenticación**: 

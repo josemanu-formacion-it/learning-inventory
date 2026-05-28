@@ -1,6 +1,6 @@
-# 📦 EcoMarket Inventory - Fase 6
+# 📦 Learning Inventory - Fase 6
 
-Bienvenido al sistema de gestión de inventario de **EcoMarket**. Este proyecto representa la culminación de la Fase 6, centrada en la maestría de **Bases de Datos Relacionales con PostgreSQL**, modelado de datos avanzado y arquitectura serverless con **Neon**.
+Bienvenido al sistema de gestión de inventario de **Learning Inventory**. Este proyecto representa la culminación de la Fase 6, centrada en la maestría de **Bases de Datos Relacionales con PostgreSQL**, modelado de datos avanzado y arquitectura serverless con **Neon**.
 
 [![Desplegado en Vercel](https://img.shields.io/badge/Vercel-Desplegado-black?style=for-the-badge&logo=vercel)](https://learning-inventory-olive.vercel.app/)
 [![Base de Datos Neon](https://img.shields.io/badge/Neon-PostgreSQL-00E599?style=for-the-badge&logo=postgresql&logoColor=white)](https://neon.tech)
