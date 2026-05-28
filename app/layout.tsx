@@ -15,7 +15,7 @@ export default function RootLayout({
     <html lang="es" className="h-full">
       <body className="h-full font-sans antialiased text-gray-900 bg-gray-50">
         <nav className="bg-white border-b border-gray-200 sticky top-0 z-40">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-full px-[10%]">
             <div className="flex justify-between h-16">
               <div className="flex items-center">
                 <div className="flex-shrink-0 flex items-center gap-2">

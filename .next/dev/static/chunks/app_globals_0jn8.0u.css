@@ -132,7 +132,6 @@
     --container-md: 28rem;
     --container-lg: 32rem;
     --container-2xl: 42rem;
-    --container-7xl: 80rem;
     --text-xs: .75rem;
     --text-xs--line-height: calc(1 / .75);
     --text-sm: .875rem;
@@ -715,8 +714,8 @@
     max-width: var(--container-2xl);
   }
 
-  .max-w-7xl {
-    max-width: var(--container-7xl);
+  .max-w-full {
+    max-width: 100%;
   }
 
   .max-w-lg {
@@ -1747,12 +1746,6 @@
     }
   }
 
-  @media (min-width: 40rem) {
-    .sm\:px-6 {
-      padding-inline: calc(var(--spacing) * 6);
-    }
-  }
-
   @media (min-width: 48rem) {
     .md\:grid-cols-2 {
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1850,12 +1843,6 @@
   @media (min-width: 64rem) {
     .lg\:flex-row {
       flex-direction: row;
-    }
-  }
-
-  @media (min-width: 64rem) {
-    .lg\:px-8 {
-      padding-inline: calc(var(--spacing) * 8);
     }
   }
 
