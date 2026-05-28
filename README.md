@@ -16,9 +16,14 @@ Bienvenido al sistema de gestión de inventario de **Learning Inventory**. Este 
 Se han implementado y probado scripts para las operaciones fundamentales del negocio:
 - **Joins Complejos**: Consultas `INNER JOIN` para reconstruir la información del producto con su categoría.
 - **Agregaciones**: Reportes de conteo por categoría usando `GROUP BY` y `COUNT()`.
-- **Transacciones**: Actualizaciones seguras de stock tras simulaciones de venta.
+- **CRUD Completo**: Implementación de creación (`POST`), lectura (`GET`) y actualización (`PUT`) con persistencia real.
 
-### 3. Seguridad y Persistencia
+### 3. UI/UX Avanzada y Responsive
+- **Diseño Fluido**: Maquetación basada en porcentajes que mantiene márgenes del 10% a cada lado, garantizando una visualización perfecta incluso con altos niveles de zoom.
+- **Interactividad Modal**: Ventanas emergentes con cierre por clic externo (backdrop) y protección de propagación para una experiencia de usuario moderna.
+- **Gestión Intuitiva**: Botones de gestión siempre visibles en dispositivos móviles/táctiles, eliminando la dependencia de estados `hover`.
+
+### 4. Seguridad y Persistencia
 - **Capa Serverless**: Integración con el driver `@neondatabase/serverless` optimizado para Vercel Edge.
 - **Prevención de Inyección SQL**: Implementación mandatoria de **consultas parametrizadas** en todos los endpoints de la API.
 - **Variables de Entorno**: Gestión segura de credenciales mediante `.env.local` (ignorado en Git) y secretos de Vercel.
