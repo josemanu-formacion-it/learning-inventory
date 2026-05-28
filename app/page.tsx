@@ -308,11 +308,13 @@ export default function InventoryPage() {
       {/* Modal - Añadir/Editar Producto */}
       {isModalOpen && (
         <div 
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
-          onClick={handleCloseModal}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm cursor-pointer"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) handleCloseModal();
+          }}
         >
           <div 
-            className="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200"
+            className="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200 cursor-default"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
