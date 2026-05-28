@@ -38,6 +38,7 @@ export default function InventoryPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isSubmitting, setIsModalSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -52,21 +53,18 @@ export default function InventoryPage() {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/products');
-      const data = await res.json();
-      setProducts(Array.isArray(data) ? data : []);
+      const [productsRes, categoriesRes] = await Promise.all([
+        fetch('/api/products'),
+        fetch('/api/categories')
+      ]);
       
-      // Extraer categorías únicas para el formulario (simulado a partir de los datos actuales o se podría llamar a un API de categorías si existiera)
-      const uniqueCategories = Array.from(new Set(data.map((p: any) => p.category_name))).map(name => {
-        const prod = data.find((p: any) => p.category_name === name);
-        return { id: prod.category_id || '', name };
-      }).filter(c => c.id !== '');
+      const productsData = await productsRes.json();
+      const categoriesData = await categoriesRes.json();
       
-      // Como no tenemos un endpoint de categorías independiente todavía, usaremos IDs fijos basados en las semillas si los conocemos, 
-      // o dejaremos que el usuario los use si los productos ya vienen con ellos.
-      setCategories(uniqueCategories);
+      setProducts(Array.isArray(productsData) ? productsData : []);
+      setCategories(Array.isArray(categoriesData) ? categoriesData : []);
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error('Error fetching data:', error);
     } finally {
       setTimeout(() => setLoading(false), 600);
     }
@@ -76,14 +74,46 @@ export default function InventoryPage() {
     fetchProducts();
   }, []);
 
-  const handleAddProduct = async (e: React.FormEvent) => {
+  const openAddModal = () => {
+    setEditingProduct(null);
+    setFormData({ name: '', price: '', stock: '', category_id: '' });
+    setIsModalOpen(true);
+  };
+
+  const openEditModal = (product: Product) => {
+    setEditingProduct(product);
+    // Encontrar el category_id para el producto
+    // Nota: el objeto product ya debería tener category_id si el API lo devuelve
+    // Si no, lo buscamos en el array de categorías por nombre
+    const catId = categories.find(c => c.name === product.category_name)?.id || '';
+    
+    setFormData({
+      name: product.name,
+      price: product.price.toString(),
+      stock: product.stock.toString(),
+      category_id: (product as any).category_id || catId
+    });
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setEditingProduct(null);
+    setSuccessMessage(null);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsModalSubmitting(true);
     try {
-      const res = await fetch('/api/products', {
-        method: 'POST',
+      const url = editingProduct ? `/api/products` : '/api/products';
+      const method = editingProduct ? 'PUT' : 'POST';
+      
+      const res = await fetch(url, {
+        method,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
+          id: editingProduct?.id,
           ...formData,
           price: parseFloat(formData.price),
           stock: parseInt(formData.stock, 10)
@@ -91,16 +121,14 @@ export default function InventoryPage() {
       });
 
       if (res.ok) {
-        setSuccessMessage('¡Producto añadido con éxito!');
-        setFormData({ name: '', price: '', stock: '', category_id: '' });
+        setSuccessMessage(editingProduct ? '¡Producto actualizado!' : '¡Producto añadido!');
         setTimeout(() => {
-          setIsModalOpen(false);
-          setSuccessMessage(null);
+          handleCloseModal();
           fetchProducts();
         }, 1500);
       }
     } catch (error) {
-      console.error('Error adding product:', error);
+      console.error('Error saving product:', error);
     } finally {
       setIsModalSubmitting(false);
     }
@@ -143,7 +171,7 @@ export default function InventoryPage() {
               <RefreshCcw className={loading ? 'animate-spin' : ''} size={20} />
             </button>
             <button 
-              onClick={() => setIsModalOpen(true)}
+              onClick={openAddModal}
               className="flex items-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition-all active:scale-95"
             >
               <Plus size={20} />
@@ -223,9 +251,12 @@ export default function InventoryPage() {
                     <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-wider border border-slate-200">
                       {product.category_name}
                     </span>
-                    <div className="text-slate-300 group-hover:text-indigo-600 transition-colors">
+                    <button 
+                      onClick={() => openEditModal(product)}
+                      className="text-slate-300 hover:text-indigo-600 transition-colors"
+                    >
                       <ArrowUpRight size={18} />
-                    </div>
+                    </button>
                   </div>
 
                   <h4 className="text-lg font-bold text-slate-900 mb-4 truncate">
@@ -250,9 +281,9 @@ export default function InventoryPage() {
                     </div>
                   </div>
 
-                  <div className="mt-6 pt-4 border-t border-slate-50 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="mt-6 pt-4 border-t border-slate-50 flex items-center justify-between md:opacity-0 md:group-hover:opacity-100 transition-opacity">
                     <button 
-                      onClick={() => alert(`Gestionar stock para: ${product.name}`)}
+                      onClick={() => openEditModal(product)}
                       className="text-xs font-bold text-indigo-600 hover:text-indigo-800 flex items-center gap-1"
                     >
                       Gestionar <ChevronRight size={14} />
@@ -274,21 +305,23 @@ export default function InventoryPage() {
         </div>
       </div>
 
-      {/* Modal - Añadir Producto */}
+      {/* Modal - Añadir/Editar Producto */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
           <div className="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
             <div className="px-8 py-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-              <h3 className="text-xl font-bold text-slate-900">Nuevo Producto</h3>
+              <h3 className="text-xl font-bold text-slate-900">
+                {editingProduct ? 'Editar Producto' : 'Nuevo Producto'}
+              </h3>
               <button 
-                onClick={() => setIsModalOpen(false)}
+                onClick={handleCloseModal}
                 className="p-2 hover:bg-white rounded-xl text-slate-400 hover:text-slate-600 transition-colors border border-transparent hover:border-slate-200"
               >
                 <X size={20} />
               </button>
             </div>
 
-            <form onSubmit={handleAddProduct} className="p-8 space-y-5">
+            <form onSubmit={handleSubmit} className="p-8 space-y-5">
               {successMessage ? (
                 <div className="py-12 text-center space-y-4">
                   <div className="bg-emerald-100 text-emerald-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto animate-bounce">
@@ -324,7 +357,7 @@ export default function InventoryPage() {
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Stock Inicial</label>
+                      <label className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1.5 ml-1">Stock Actual</label>
                       <input 
                         type="number" 
                         required
@@ -354,7 +387,7 @@ export default function InventoryPage() {
                   <div className="pt-4 flex gap-3">
                     <button 
                       type="button"
-                      onClick={() => setIsModalOpen(false)}
+                      onClick={handleCloseModal}
                       className="flex-1 px-6 py-3 rounded-xl font-bold text-slate-500 hover:bg-slate-100 transition-colors"
                     >
                       Cancelar
@@ -364,8 +397,8 @@ export default function InventoryPage() {
                       disabled={isSubmitting}
                       className="flex-[2] bg-slate-900 text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:bg-indigo-600 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
                     >
-                      {isSubmitting ? <Loader2 className="animate-spin" size={20} /> : <Plus size={20} />}
-                      Guardar Producto
+                      {isSubmitting ? <Loader2 className="animate-spin" size={20} /> : (editingProduct ? <CheckCircle2 size={20} /> : <Plus size={20} />)}
+                      {editingProduct ? 'Actualizar' : 'Guardar Producto'}
                     </button>
                   </div>
                 </>

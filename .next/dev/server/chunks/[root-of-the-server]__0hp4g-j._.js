@@ -64,7 +64,9 @@ __turbopack_context__.s([
     "GET",
     ()=>GET,
     "POST",
-    ()=>POST
+    ()=>POST,
+    "PUT",
+    ()=>PUT
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/server.js [app-route] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/db.ts [app-route] (ecmascript)");
@@ -72,13 +74,14 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$
 ;
 async function GET() {
     try {
-        // Consulta con JOIN para obtener productos y sus categorías
+        // Consulta con JOIN para obtener productos y sus categorías, incluyendo el ID de categoría para el formulario
         const result = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["sql"].query(`
       SELECT 
         p.id, 
         p.name, 
         p.price, 
         p.stock, 
+        p.category_id,
         c.name as category_name
       FROM products p
       INNER JOIN categories c ON p.category_id = c.id
@@ -99,7 +102,6 @@ async function POST(request) {
     try {
         const body = await request.json();
         const { name, price, stock, category_id } = body;
-        // Uso de consulta parametrizada para evitar Inyección SQL
         const result = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["sql"].query('INSERT INTO products (name, price, stock, category_id) VALUES ($1, $2, $3, $4) RETURNING *', [
             name,
             price,
@@ -113,6 +115,34 @@ async function POST(request) {
         console.error('Database error:', error);
         return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
             error: 'Error al crear el producto'
+        }, {
+            status: 500
+        });
+    }
+}
+async function PUT(request) {
+    try {
+        const body = await request.json();
+        const { id, name, price, stock, category_id } = body;
+        const result = await __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$db$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["sql"].query('UPDATE products SET name = $1, price = $2, stock = $3, category_id = $4 WHERE id = $5 RETURNING *', [
+            name,
+            price,
+            stock,
+            category_id,
+            id
+        ]);
+        if (result.rows.length === 0) {
+            return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+                error: 'Producto no encontrado'
+            }, {
+                status: 404
+            });
+        }
+        return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json(result.rows[0]);
+    } catch (error) {
+        console.error('Database error:', error);
+        return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
+            error: 'Error al actualizar el producto'
         }, {
             status: 500
         });

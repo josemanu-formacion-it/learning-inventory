@@ -56,6 +56,15 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../../app/api/categories/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/categories">> = Specific
+  const handler = {} as typeof import("../../../app/api/categories/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
 // Validate ../../../app/api/drizzle-test/route.ts
 {
   type __IsExpected<Specific extends RouteHandlerConfig<"/api/drizzle-test">> = Specific
