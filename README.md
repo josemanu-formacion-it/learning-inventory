@@ -1,52 +1,55 @@
-# Learning Inventory - Fase 6 🚀
+# 📦 EcoMarket Inventory - Fase 6
 
-Este proyecto es una aplicación de gestión de inventario diseñada para dominar las bases de datos relacionales con **PostgreSQL** y **Neon**.
+Bienvenido al sistema de gestión de inventario de **EcoMarket**. Este proyecto representa la culminación de la Fase 6, centrada en la maestría de **Bases de Datos Relacionales con PostgreSQL**, modelado de datos avanzado y arquitectura serverless con **Neon**.
 
-## 🛠️ Stack Tecnológico
-- **Base de Datos:** PostgreSQL (Serverless via [Neon](https://neon.tech))
-- **Backend:** Next.js (App Router)
-- **Frontend:** React + Tailwind CSS
-- **Despliegue:** Vercel
+[![Desplegado en Vercel](https://img.shields.io/badge/Vercel-Desplegado-black?style=for-the-badge&logo=vercel)](https://learning-inventory-olive.vercel.app/)
+[![Base de Datos Neon](https://img.shields.io/badge/Neon-PostgreSQL-00E599?style=for-the-badge&logo=postgresql&logoColor=white)](https://neon.tech)
 
-## 📂 Estructura del Proyecto
-- `/sql`: Scripts de base de datos (Esquema y Semillas).
-- `/docs`: Documentación técnica y análisis.
-- `/lib`: Configuración de la conexión a la DB y utilidades.
-- `/app`: Rutas y lógica de la aplicación (Next.js).
+## 🎯 Objetivos Cumplidos
 
-## 🚀 Pasos para Empezar
+### 1. Modelado de Datos Avanzado
+- **Esquema Relacional**: Diseño robusto con tablas `categories` y `products`.
+- **Integridad Referencial**: Uso de Claves Primarias (UUID) y Claves Foráneas con restricciones `ON DELETE RESTRICT` para evitar pérdidas accidentales de datos.
+- **Validaciones a Nivel de Motor**: Restricciones `CHECK` para precios positivos y stock no negativo.
 
-### 1. Configuración de Base de Datos (Neon)
-1. Regístrate en [Neon.tech](https://neon.tech).
-2. Crea un proyecto llamado `learning-inventory`.
-3. En el panel de control, copia tu **Connection String** (ej: `postgresql://user:password@host/dbname?sslmode=require`).
-4. Ve a la sección **SQL Editor** en Neon y pega el contenido de `sql/schema.sql` para crear las tablas.
-5. (Opcional) Ejecuta `sql/seed.sql` para cargar datos iniciales de prueba.
+### 2. Operaciones SQL Críticas
+Se han implementado y probado scripts para las operaciones fundamentales del negocio:
+- **Joins Complejos**: Consultas `INNER JOIN` para reconstruir la información del producto con su categoría.
+- **Agregaciones**: Reportes de conteo por categoría usando `GROUP BY` y `COUNT()`.
+- **Transacciones**: Actualizaciones seguras de stock tras simulaciones de venta.
 
-### 2. Variables de Entorno
-Crea un archivo `.env.local` en la raíz del proyecto y añade tu cadena de conexión:
-```env
-DATABASE_URL=tu_cadena_de_conexion_aqui
-```
+### 3. Seguridad y Persistencia
+- **Capa Serverless**: Integración con el driver `@neondatabase/serverless` optimizado para Vercel Edge.
+- **Prevención de Inyección SQL**: Implementación mandatoria de **consultas parametrizadas** en todos los endpoints de la API.
+- **Variables de Entorno**: Gestión segura de credenciales mediante `.env.local` (ignorado en Git) y secretos de Vercel.
 
-### 3. Instalación de Dependencias
-```bash
-npm install @neondatabase/serverless
-```
+## 🏗️ Abstracción: SQL Puro vs Drizzle ORM
 
-## 📖 Documentación Requerida
-- [Diseño de Arquitectura](./docs/arquitectura-datos.md)
-- [Análisis SQL (Joins)](./docs/analisis-sql.md)
-- [Seguridad y Prevención de Inyección SQL](./docs/seguridad-db.md)
+En este proyecto hemos explorado ambos mundos para entender los cimientos y la productividad moderna.
 
-## 🏗️ Abstracción con ORMs: Drizzle ORM
+| Característica | SQL Puro (Driver Neon) | Drizzle ORM |
+| :--- | :--- | :--- |
+| **Control** | Total y absoluto sobre cada byte de la query. | Alto, con sintaxis muy cercana a SQL. |
+| **Seguridad** | Manual (requiere disciplina con parámetros). | Nativa (las queries son seguras por diseño). |
+| **Type Safety** | Nula (los resultados son `any` o interfaces manuales). | Máxima (inferencia de tipos automática desde el esquema). |
+| **Mantenimiento** | Difícil en esquemas grandes (strings de SQL). | Excelente (el esquema es el "Single Source of Truth"). |
 
-Aunque escribir SQL puro es fundamental, para escalar aplicaciones utilizamos **Drizzle ORM**. 
+**Conclusión**: Para este proyecto, hemos implementado el esquema principal en SQL puro para demostrar dominio de la base, pero hemos configurado **Drizzle ORM** (`lib/schema.ts`) para mostrar cómo escalaríamos a una aplicación empresarial donde la seguridad de tipos es innegociable.
 
-### Ventajas de usar Drizzle ORM:
-1. **Type Safety:** El esquema se define en TypeScript (`lib/schema.ts`), lo que permite que el autocompletado nos ayude a evitar errores de nombres de columnas o tipos de datos.
-2. **SQL-like:** A diferencia de otros ORMs que abstraen demasiado, Drizzle mantiene una sintaxis muy parecida a SQL, lo que facilita la transición.
-3. **Rendimiento:** Es extremadamente ligero y no tiene sobrecarga de ejecución (runtime overhead) significativa.
-4. **Migraciones:** Facilita la evolución de la base de datos de forma controlada.
+## 🚀 Despliegue Técnico
 
-Puedes ver un ejemplo de implementación en `/app/api/drizzle-test/route.ts`.
+### Entregables de la Fase
+- **Frontend**: [https://learning-inventory-olive.vercel.app/](https://learning-inventory-olive.vercel.app/)
+- **Scripts SQL**: Ubicados en `/sql` (`schema.sql`, `seed.sql`, `queries.sql`).
+- **Documentación**: Análisis técnico detallado en `/docs`.
+
+### Instrucciones de Instalación Local
+1. Clona el repositorio.
+2. Instala dependencias: `npm install`.
+3. Configura `DATABASE_URL` en tu `.env.local`.
+4. Ejecuta la migración inicial: `npm run migrate`.
+5. Inicia el modo desarrollo: `npm run dev`.
+
+---
+*Proyecto desarrollado como parte del programa de formación avanzada en desarrollo FullStack.*
+
